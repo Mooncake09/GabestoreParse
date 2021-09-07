@@ -14,7 +14,7 @@ namespace GabestoreParse
             var parser = new Parser();
             for (int i = 1; i <= Container.PAGE_NUMBERS; i++)
             {
-                var document = await parser.ParseRawDataAsync(i);
+                var document = await parser.ParseGameCatalogHtmlAsync(i);
                 var html = parser.GetHtmlFromJson(document);
                 var links = await HTMLHandler.ExtractLinksAsync(html);
                 if (links != null) Container.Links.AddRange(links);

@@ -13,6 +13,6 @@ namespace GabestoreParse
     {
         public const int PAGE_NUMBERS = 118;
         public static List<IElement> Links = new List<IElement>();
-        public static Game[] Games = new Game[Links.Count]; 
+       // public static Game[] Games = new Game[Links.Count];
     }
 }

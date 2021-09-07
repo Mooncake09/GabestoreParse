@@ -15,7 +15,7 @@ namespace GabestoreParse
         {
             Client = new HttpClient();
         }
-        public async Task<string> ParseRawDataAsync(int pageNumber)
+        public async Task<string> ParseGameCatalogHtmlAsync(int pageNumber) //со страницы возвращается строка, содержая html в Json 
         {
             var url = "https://gabestore.ru/search/next?series=&ProductFilter%5Bavailable%5D=0&ProductFilter%5Bavailable%5D=1&ProductFilter%5BsortName%5D=views&page=" + pageNumber.ToString();
             try 
@@ -51,7 +51,7 @@ namespace GabestoreParse
                 var response = await Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
                 var document = await response.Content.ReadAsStringAsync();
-                await HTMLHandler.ExtractGameInfoFromPage(document);
+                await HTMLHandler.ExtractGameInfoFromPageAsync(document);
             }
             catch
             {

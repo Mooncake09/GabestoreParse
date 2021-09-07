@@ -31,7 +31,7 @@ namespace GabestoreParse
             }
 
         }
-        public string GetHtmlFromJson(string jsonString)
+        public string GetHtml(string jsonString)
         {
             var json = JsonDocument.Parse(jsonString);
             if (json.RootElement.TryGetProperty("html", out var html))
@@ -44,20 +44,8 @@ namespace GabestoreParse
             }
         }
 
-        public async Task<Game> ParseGameInfoAsync(string url)
+        public async Task<Game> ParseGameData(string url)
         {
-            try
-            {
-                var response = await Client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-                var document = await response.Content.ReadAsStringAsync();
-                await HTMLHandler.ExtractGameInfoFromPage(document);
-            }
-            catch
-            {
-                throw new Exception();
-            }
-
             return new Game();
         }
     }

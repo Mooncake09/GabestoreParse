@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Html;
@@ -21,36 +20,8 @@ namespace GabestoreParse
             foreach (var link in linkList)
             {
                 link.TextContent = @"https://gabestore.ru" + link.GetAttribute("href");
-                Console.WriteLine(link.TextContent);
             }
             return linkList;
-        }
-        public static async Task<List<Game>> ExtractGameInfoFromPage(string htmlGamePage)
-        {
-            var document = await Context.OpenAsync(req => req.Content(htmlGamePage));
-            var game = new Game();
-            var title = document.QuerySelectorAll("h1").Where(title => title.ClassName.Contains("b-card__title")).Single();
-            title.TextContent = title.TextContent.Replace("купить ", "");
-            var priceString = document.GetElementsByClassName("b-card__price-currentprice").Single().TextContent;
-            priceString = priceString.Replace(" ₽", "");
-            var genre = document.QuerySelectorAll(".b-card__table")[0].ChildNodes.GetElementsByClassName("b-card__table-item")[0].ChildElementCount;
-            Console.WriteLine(genre);
-            return new List<Game>();
-        }
-        public static void TestRegexp()
-        {
-            string s = "Бык тупогуб, тупогубенький бычок, у быка губа бела была тупа";
-            Regex regex = new Regex(@"туп(\w*)");
-            MatchCollection matches = regex.Matches(s);
-            if (matches.Count > 0)
-            {
-                foreach (Match match in matches)
-                    Console.WriteLine(match.Value);
-            }
-            else
-            {
-                Console.WriteLine("Совпадений не найдено");
-            }
         }
     }
 }

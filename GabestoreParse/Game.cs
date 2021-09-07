@@ -8,7 +8,7 @@ namespace GabestoreParse
 {
     class Game
     {
-        public string Title { get; set; }
+        public string Name { get; set; }
         public double Price { get; set; }
         public string Genre { get; set; }
         public string Platform { get; set; }

@@ -8,22 +8,25 @@ namespace GabestoreParse
 {
     class Program
     {
-        const int PAGE_NUMBERS = 118;
         static async Task Main(string[] args)
         {
-            var container = new Container();
+            
             var parser = new Parser();
-            for (int i = 1; i <= PAGE_NUMBERS; i++)
+            for (int i = 1; i <= Container.PAGE_NUMBERS; i++)
             {
-                Thread.Sleep(2000);
                 var document = await parser.ParseRawDataAsync(i);
-                var html = parser.GetHtml(document);
-                container.Links.AddRange(await HTMLHandler.ExtractLinksAsync(html));
+                var html = parser.GetHtmlFromJson(document);
+                var links = await HTMLHandler.ExtractLinksAsync(html);
+                if (links != null) Container.Links.AddRange(links);
+                foreach (var link in Container.Links)
+                {
+                    var game = await parser.ParseGameInfoAsync(link.TextContent);
+                }
+                Thread.Sleep(2000);
             }
-            foreach (var link in container.Links)
-            {
-                Console.WriteLine(link.TextContent);
-            }
+
+           //await parser.ParseGameDataAsync(@"https://gabestore.ru/game/red-dead-redemption-2");
+
 
         }
     }

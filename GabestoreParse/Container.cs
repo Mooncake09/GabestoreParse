@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace GabestoreParse
 {
-    class Container
+    static class Container
     {
-        public List<AngleSharp.Dom.IElement> Links { get; set; }
-        public List<Game> Games { get; set; }
+        public const int PAGE_NUMBERS = 118;
+        public static List<IElement> Links = new List<IElement>();
+        public static Game[] Games = new Game[Links.Count]; 
     }
 }

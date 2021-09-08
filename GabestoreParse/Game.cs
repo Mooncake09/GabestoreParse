@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
+using System.ComponentModel.DataAnnotations;
 
 namespace GabestoreParse
 {
@@ -35,10 +36,14 @@ namespace GabestoreParse
             Publisher = publisher;
             Developer = developer;
         }
+
+        public Game() { }
         public string Title { get; set; }
         public float Price { get; set; }
         public string Genre { get; set; }
         public string Platform { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
         public string Publisher { get; set; }
         public string Developer { get; set; }

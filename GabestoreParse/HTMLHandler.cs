@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AngleSharp;
-using AngleSharp.Html;
 using AngleSharp.Dom;
 
 namespace GabestoreParse
@@ -26,26 +24,21 @@ namespace GabestoreParse
         }
         public static async Task<Game> ExtractGameInfoFromPageAsync(string htmlGamePage)
         {
+            var game = new Game();
             //извлекает из html страницы с конкретной игрой информацию о ней
             var document = await Context.OpenAsync(req => req.Content(htmlGamePage));
             //название игры
             var title = document.QuerySelectorAll("h1").Where(title => title.ClassName.Contains("b-card__title")).Single().TextContent;
-            title = title.Replace("купить ", "");
+            game.Title = title.Replace("купить ", "");
 
             //цена
             var priceString = document.GetElementsByClassName("b-card__price-currentprice").Single().TextContent;
             priceString = priceString.Replace(" ₽", "");
-            var price = float.Parse(priceString);
+            game.Price = float.Parse(priceString);
             
 
             //поля с информацией о жанре, платформе, дате выхода, издателе и разработчике
             var gameInfoFields = document.QuerySelectorAll(".b-card__table").First().QuerySelectorAll(".b-card__table-item"); //список дивов b-card__table-item
-
-            string genre = "";
-            string platform = "";
-            DateTime realeseDate = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
-            string publisher = "";
-            string developer = "";
             foreach (var gameInfoField in gameInfoFields)
             {
                 var infoFieldName = gameInfoField.QuerySelector(".b-card__table-title").TextContent;
@@ -55,32 +48,30 @@ namespace GabestoreParse
                         var genresList = gameInfoField.QuerySelector(".b-card__table-value").QuerySelectorAll("a"); //для нормализации БД создать отдельную таблицу с жанрами?
                         foreach (var g in genresList)
                         {
-                            genre += g.TextContent;
-                            if (!g.IsLastChild()) genre += ", "; //в случае если у игры указано несколько жанров, то добавляет разделитель между ними
+                            game.Genre += g.TextContent;
+                            if (!g.IsLastChild()) game.Genre += ", "; //в случае если у игры указано несколько жанров, то добавляет разделитель между ними
                         }
                         break;
 
                     case "Платформа":
-                        platform = gameInfoField.QuerySelector(".b-card__table-value").TextContent;
+                        game.Platform = gameInfoField.QuerySelector(".b-card__table-value").TextContent;
                         break;
 
                     case "Дата выхода":
-                        realeseDate = DateTime.Parse(gameInfoField.QuerySelector(".b-card__table-value").TextContent);
+                        game.ReleaseDate = DateTime.Parse(gameInfoField.QuerySelector(".b-card__table-value").TextContent);
                         break;
 
                     case "Издатель":
-                        publisher = gameInfoField.QuerySelector(".b-card__table-value").QuerySelector("a").TextContent;
+                        game.Publisher = gameInfoField.QuerySelector(".b-card__table-value").QuerySelector("a").TextContent;
                         break;
 
                     case "Разработчик":
-                        developer = gameInfoField.QuerySelector(".b-card__table-value").QuerySelector("a").TextContent;
+                        game.Developer = gameInfoField.QuerySelector(".b-card__table-value").QuerySelector("a").TextContent;
                         break;
                 }
             }
 
-            //Console.WriteLine($"{title} {genre} цена: {priceString}, платформа {platform} дата выхода {realeseDate} Издатель {publisher} разработчик {developer}");
-
-            return new Game(title, price, genre, platform, realeseDate, publisher, developer);
+            return game;
         }
     }
 }

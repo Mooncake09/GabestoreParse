@@ -44,21 +44,34 @@ namespace GabestoreParse
             }
         }
 
-        public async Task<Game> ParseGameInfoAsync(string url)
+        public async Task<Game> ParseGamePageAsync(string url)
         {
             try
             {
                 var response = await Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
                 var document = await response.Content.ReadAsStringAsync();
-                await HTMLHandler.ExtractGameInfoFromPageAsync(document);
+                return await HTMLHandler.ExtractGameInfoFromPageAsync(document);
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception();
+                throw new Exception(e.Message);
             }
+        }
 
-            return new Game();
+        public async Task<Game> ParseGamePageAsync(AngleSharp.Dom.IElement url)
+        {
+            try
+            {
+                var response = await Client.GetAsync(url.TextContent);
+                response.EnsureSuccessStatusCode();
+                var document = await response.Content.ReadAsStringAsync();
+                return await HTMLHandler.ExtractGameInfoFromPageAsync(document);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

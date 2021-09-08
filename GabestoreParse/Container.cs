@@ -11,8 +11,8 @@ namespace GabestoreParse
 {
     static class Container
     {
-        public const int PAGE_NUMBERS = 118;
+        public const int CATALOG_PAGE_NUMBER = 118;
         public static List<IElement> Links = new List<IElement>();
-       // public static Game[] Games = new Game[Links.Count];
+        public static List<Game> Games = new List<Game>();
     }
 }
